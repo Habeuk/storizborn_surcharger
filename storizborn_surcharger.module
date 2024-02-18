@@ -15,28 +15,36 @@ use \Drupal\Core\Form\FormStateInterface;
 /**
  * implement hook_preprocess_HOOK
  */
-function storizborn_surcharger_preprocess_block__aggregator(&$vars) {
+function storizborn_surcharger_preprocess_block__aggregator(&$vars)
+{
   if (isset($vars['base_plugin_id']) && $vars['base_plugin_id'] == 'aggregator_feed_block') {
     $vars['content']['list']['#theme'] = 'storizborn_surcharger_aggregator';
   }
-  
+
   // dump($vars);
 }
 
 /**
- * implement hook_preprocess_container
+ * 
+ * implement hook_preprocess_menu
+ * this for change the viewer of the tools menu
+ * 
  */
-function storizborn_surcharger_preprocess_container(&$vars) {
-  $routeName = \Drupal::routeMatch()->getRouteName();
-  if (isset($vars['theme_hook_original']) && $vars['theme_hook_original'] == 'container' && ($routeName == 'view.actualites.page_1' || $routeName == 'entity.taxonomy_term.canonical')) {
-    if (isset($vars['attributes']['class']) && is_array($vars['attributes']['class']))
-      array_push($vars['attributes']['class'], 'container');
-    else {
-      $vars['attributes']['class'] = [
-        'container'
-      ];
+function storizborn_surcharger_preprocess_menu(&$vars)
+{
+  if (isset($vars['theme_hook_original']) && $vars['theme_hook_orginal'] = 'menu__tools') {
+    if ($vars['menu_name'] == 'tools') {
+      $vars['attributes']['class'] = ['st_block__items_menu'];
     }
-    // dump($vars);
+    foreach ($vars['items'] as $item) {
+      /**
+       *
+       * @var \Drupal\Core\Template\Attribute $attribute
+       */
+      $attribute = $item['attributes'];
+      $attribute->addClass('st_block__items');
+    }
+    //dump($vars['items']);
   }
 }
 
@@ -57,7 +65,8 @@ function storizborn_surcharger_preprocess_container(&$vars) {
 /**
  * implements hook_theme()
  */
-function storizborn_surcharger_theme() {
+function storizborn_surcharger_theme()
+{
   // pre-formatage pour les flux rss
   $hooks['storizborn_surcharger_aggregator'] = [
     'render element' => 'element',
@@ -66,6 +75,7 @@ function storizborn_surcharger_theme() {
     ],
     'file' => 'storizborn_surcharger.theme.inc'
   ];
+  // pre-formatage pour le ...
   $hooks['storizborn_surcharger_bn'] = [
     'render element' => 'element',
     'preprocess functions' => [
@@ -81,8 +91,9 @@ function storizborn_surcharger_theme() {
  *
  * @param array $vars
  */
-function storizborn_surcharger_preprocess_node(&$vars) {
-  
+function storizborn_surcharger_preprocess_node(&$vars)
+{
+
   // if (!empty($vars['elements']['#node'])) {
   // /**
   // *
