@@ -1,0 +1,17 @@
+{% if content %}
+<div {{ attributes.addClass('st_block')}}>
+    {% if content.block_title %}
+    <h3 {{ region_attributes.block_title.addClass('st_block__title')}}>
+        {{ content.block_title }}
+    </h3>
+    {% endif %}
+    {% if content.block_content %}
+    <div {{ region_attributes.block_content.addClass('st_block__items')}}>
+        {{ content.block_content }}
+    </div>
+    {% endif %}
+    {#% for item in content.block_content|array_elements(region_attributes.block_content.addClass('st_block__items__it')) %}
+    {{ item }} 
+    {% endfor %#}
+</div>
+{% endif %}
